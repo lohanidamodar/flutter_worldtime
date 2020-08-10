@@ -17,6 +17,13 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: AppColors.darkBg,
         primarySwatch: Colors.pink,
         visualDensity: VisualDensity.adaptivePlatformDensity,
+        cardTheme: CardTheme(
+          elevation: 0,
+          color: AppColors.darkClockBg,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+        ),
       ),
       home: ClockPage(),
     );

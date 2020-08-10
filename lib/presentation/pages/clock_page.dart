@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_worldtime/data/model/time_info.dart';
 import 'package:flutter_worldtime/data/service/worldtime_api.dart';
@@ -31,13 +32,20 @@ class ClockPage extends StatefulWidget {
 }
 
 class _ClockPageState extends State<ClockPage> {
+  Timer timer;
   @override
   void initState() {
     super.initState();
-    Timer.periodic(Duration(seconds: 1), (timer) {
+    timer = Timer.periodic(Duration(seconds: 1), (timer) {
       timeProvider.read(context).state =
           timeProvider.read(context).state.add(Duration(seconds: 1));
     });
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -88,12 +96,56 @@ class _ClockPageState extends State<ClockPage> {
                         error: (err, stack) => Container());
                   }),
                   Text(
-                    DateFormat.Hm().format(time),
+                    DateFormat.jm().format(time),
                     style: Theme.of(context).textTheme.headline2,
                   ),
+                  const SizedBox(height: 10.0),
                 ],
               );
             }),
+          ),
+          SizedBox(
+            height: 200,
+            child: ListView(
+              padding: const EdgeInsets.all(16.0),
+              scrollDirection: Axis.horizontal,
+              children: [
+                Card(
+                  child: Container(
+                    width: 300,
+                    padding: const EdgeInsets.all(32.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          "New York, USA",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 20.0,
+                          ),
+                        ),
+                        const SizedBox(height: 5.0),
+                        Text(
+                          "+3HRS | EST",
+                          style: TextStyle(
+                            color: Colors.grey,
+                          ),
+                        ),
+                        const SizedBox(height: 15.0),
+                        Text(
+                          DateFormat.jm().format(DateTime.now()),
+                          textAlign: TextAlign.right,
+                          style: TextStyle(
+                            fontSize: 24.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
         ],
       ),
