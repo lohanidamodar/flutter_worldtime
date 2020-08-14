@@ -6,11 +6,16 @@ class ClocksNotifier extends StateNotifier<List<TimeInfo>> {
   ClocksNotifier() : super([]);
 
   add(TimeInfo clock) {
-    state.add(clock);
+    var temp = state;
+    temp.add(clock);
+    state = temp;
+    
   }
 
   remove(TimeInfo clock) {
-    state.remove(clock);
+    var temp = state;
+    temp.remove(clock);
+    state = temp;
   }
 }
 
