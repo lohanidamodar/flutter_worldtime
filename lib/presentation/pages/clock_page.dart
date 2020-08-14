@@ -7,6 +7,7 @@ import 'package:flutter_worldtime/data/model/time_info.dart';
 import 'package:flutter_worldtime/data/service/worldtime_api.dart';
 import 'package:flutter_worldtime/presentation/widgets/clock_container.dart';
 import 'package:flutter_worldtime/presentation/widgets/clock_hands.dart';
+import 'package:flutter_worldtime/res/routes.dart';
 import 'package:intl/intl.dart';
 
 final timeProvider = StateProvider<DateTime>((ref) => DateTime.now());
@@ -52,7 +53,9 @@ class _ClockPageState extends State<ClockPage> {
                   color: Colors.pink,
                   shape: CircleBorder(),
                   child: Icon(Icons.add),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, AppRoutes.timezonesPage);
+                  },
                 ),
               ],
             ),

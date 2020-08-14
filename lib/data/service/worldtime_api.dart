@@ -27,7 +27,7 @@ class WorldTimeApi {
   static Future<List<String>> getTimeZones() async {
     http.Response res = await http.get("$baseUrl/timezone");
     if (res != null)
-      return jsonDecode(res.body);
+      return List<String>.from( jsonDecode(res.body));
     else
       return null;
   }

@@ -1,13 +1,16 @@
-class TimeInfo {
+import 'package:equatable/equatable.dart';
+import 'package:flutter_worldtime/presentation/pages/clock_page.dart';
+
+class TimeInfo extends Equatable {
   String abbreviation;
   String clientIp;
   String datetime;
   int dayOfWeek;
   int dayOfYear;
   bool dst;
-  Null dstFrom;
+  String dstFrom;
   int dstOffset;
-  Null dstUntil;
+  String dstUntil;
   int rawOffset;
   String timezone;
   int unixtime;
@@ -69,4 +72,7 @@ class TimeInfo {
     data['week_number'] = this.weekNumber;
     return data;
   }
+
+  @override
+  List<Object> get props => [abbreviation, timezone];
 }
