@@ -111,11 +111,12 @@ class _ClockPageState extends State<ClockPage> {
                       itemBuilder: (context, index) {
                         TimeInfo clock = clocks[index];
                         var time = time2.toUtc();
-                        if (clock.utcOffset.startsWith("+")) {
-                          time = time.add(Duration(seconds: clock.rawOffset));
-                        } else {
+                        int offset = clock.rawOffset + clock.dstOffset;
+                        if (clock.rawOffset > 0) {
+                          time = time.add(Duration(seconds: offset));
+                        } else if (clock.rawOffset < 0) {
                           time =
-                              time.subtract(Duration(seconds: clock.rawOffset));
+                              time.subtract(Duration(seconds: (offset * -1)));
                         }
                         return Card(
                           child: Stack(

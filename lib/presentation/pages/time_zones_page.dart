@@ -16,6 +16,7 @@ class TimezonesPage extends StatefulWidget {
 class _TimezonesPageState extends State<TimezonesPage> {
   String _timezone;
   bool _loading;
+  GlobalKey<ScaffoldState> _scaffKey = GlobalKey();
 
   @override
   void initState() {
@@ -26,6 +27,7 @@ class _TimezonesPageState extends State<TimezonesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffKey,
       appBar: AppBar(
         title: Text('Select timezone'),
       ),
@@ -56,13 +58,29 @@ class _TimezonesPageState extends State<TimezonesPage> {
                           setState(() {
                             _loading = true;
                           });
-                          TimeInfo info =
-                              await WorldTimeApi.getTimezoneTime(_timezone);
-                          clocksProvider.read(context).add(info);
-                          setState(() {
-                            _loading = false;
+                          bool exists = false;
+                          clocksProvider.state.read(context).forEach((element) {
+                            if (element.timezone == _timezone) {
+                              exists = true;
+                            }
                           });
-                          Navigator.pop(context);
+                          if (!exists) {
+                            TimeInfo info =
+                                await WorldTimeApi.getTimezoneTime(_timezone);
+                            clocksProvider.read(context).add(info);
+                            setState(() {
+                              _loading = false;
+                            });
+                            Navigator.pop(context);
+                          } else {
+                            setState(() {
+                              _loading = false;
+                            });
+                            _scaffKey.currentState.showSnackBar(SnackBar(
+                              content: Text(
+                                  "The timezone clock is already available in the list."),
+                            ));
+                          }
                         },
                 )
               ],
