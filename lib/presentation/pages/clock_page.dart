@@ -29,12 +29,9 @@ class _ClockPageState extends State<ClockPage> {
   void initState() {
     super.initState();
     timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      timeProvider.read(context).state =
-          timeProvider.read(context).state.add(Duration(seconds: 1));
+      context.read(timeProvider).state =
+          context.read(timeProvider).state.add(Duration(seconds: 1));
     });
-    /* timer2 = Timer.periodic(Duration(minutes: 2), (timer) { 
-
-    }); */
   }
 
   @override
@@ -167,7 +164,7 @@ class _ClockPageState extends State<ClockPage> {
                                 child: IconButton(
                                   icon: Icon(Icons.clear),
                                   onPressed: () {
-                                    clocksProvider.read(context).remove(clock);
+                                    context.read(clocksProvider).remove(clock);
                                   },
                                 ),
                               )

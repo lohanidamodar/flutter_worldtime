@@ -59,7 +59,7 @@ class _TimezonesPageState extends State<TimezonesPage> {
                             _loading = true;
                           });
                           bool exists = false;
-                          clocksProvider.state.read(context).forEach((element) {
+                          context.read(clocksProvider.state).forEach((element) {
                             if (element.timezone == _timezone) {
                               exists = true;
                             }
@@ -67,7 +67,7 @@ class _TimezonesPageState extends State<TimezonesPage> {
                           if (!exists) {
                             TimeInfo info =
                                 await WorldTimeApi.getTimezoneTime(_timezone);
-                            clocksProvider.read(context).add(info);
+                            context.read(clocksProvider).add(info);
                             setState(() {
                               _loading = false;
                             });
