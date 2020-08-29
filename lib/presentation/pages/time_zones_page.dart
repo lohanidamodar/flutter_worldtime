@@ -1,9 +1,6 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_worldtime/data/model/time_info.dart';
-import 'package:flutter_worldtime/data/service/worldtime_api.dart';
-import 'package:flutter_worldtime/presentation/notifiers/clocks_notifier.dart';
 import 'package:flutter_worldtime/presentation/notifiers/timezones_notifier.dart';
 
 final timeZonesProvider = StateNotifierProvider((ref) => TimezoneNotifier());
@@ -51,37 +48,7 @@ class _TimezonesPageState extends State<TimezonesPage> {
                 ),
                 RaisedButton(
                   child: _loading ? CircularProgressIndicator() : Text("Add"),
-                  onPressed: _loading
-                      ? null
-                      : () async {
-                          if (_timezone == null) return;
-                          setState(() {
-                            _loading = true;
-                          });
-                          bool exists = false;
-                          context.read(clocksProvider.state).forEach((element) {
-                            if (element.timezone == _timezone) {
-                              exists = true;
-                            }
-                          });
-                          if (!exists) {
-                            TimeInfo info =
-                                await WorldTimeApi.getTimezoneTime(_timezone);
-                            context.read(clocksProvider).add(info);
-                            setState(() {
-                              _loading = false;
-                            });
-                            Navigator.pop(context);
-                          } else {
-                            setState(() {
-                              _loading = false;
-                            });
-                            _scaffKey.currentState.showSnackBar(SnackBar(
-                              content: Text(
-                                  "The timezone clock is already available in the list."),
-                            ));
-                          }
-                        },
+                  onPressed: (){},
                 )
               ],
             );
