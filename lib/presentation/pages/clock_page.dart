@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_worldtime/data/model/time_info.dart';
 import 'package:flutter_worldtime/data/service/worldtime_api.dart';
 import 'package:flutter_worldtime/presentation/notifiers/clocks_notifier.dart';
+import 'package:flutter_worldtime/presentation/pages/time_zones_page.dart';
 import 'package:flutter_worldtime/presentation/widgets/clock_container.dart';
 import 'package:flutter_worldtime/presentation/widgets/clock_hands.dart';
 import 'package:flutter_worldtime/res/routes.dart';
@@ -19,16 +20,16 @@ final timezone = FutureProvider<TimeInfo>((ref) async {
 });
 
 class ClockPage extends StatefulHookConsumerWidget {
-
   @override
   ConsumerState<ConsumerStatefulWidget> createState() {
-      return _ClockPageState();
+    return _ClockPageState();
   }
 }
 
 class _ClockPageState extends ConsumerState<ClockPage> {
   Timer? timer;
   Timer? timer2;
+
   @override
   void initState() {
     super.initState();
@@ -66,8 +67,9 @@ class _ClockPageState extends ConsumerState<ClockPage> {
               ],
             ),
             Container(
-              child: Consumer( builder: (context, ref, child) {
-                final p = ref.watch(timeProvider);
+              child: Consumer(builder: (context, ref, child) {
+                ref.watch(timeZonesProvider);
+                ref.watch(timeProvider);
                 final time = ref.watch(timeProvider.notifier).debugState;
                 debugPrint('_ClockPageState.build: ${time}');
                 return Column(
@@ -171,7 +173,9 @@ class _ClockPageState extends ConsumerState<ClockPage> {
                                 child: IconButton(
                                   icon: Icon(Icons.clear),
                                   onPressed: () {
-                                    ref.read(clocksProvider.notifier).remove(clock);
+                                    ref
+                                        .read(clocksProvider.notifier)
+                                        .remove(clock);
                                   },
                                 ),
                               )

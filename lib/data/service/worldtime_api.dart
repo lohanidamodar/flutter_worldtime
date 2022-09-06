@@ -16,10 +16,14 @@ class WorldTimeApi {
   }
 
   static Future<TimeInfo> getTimezoneTime(String timeZone) async {
-    http.Response res = await http.get(Uri.http("$baseUrl", "api/timezone/$timeZone"));
-    if (res != null) {
-      return TimeInfo.fromJson(jsonDecode(res.body));
-    } else {
+    try {
+      http.Response res = await http.get(Uri.http("$baseUrl", "api/timezone/$timeZone"));
+      if (res != null) {
+        return TimeInfo.fromJson(jsonDecode(res.body));
+      } else {
+        return TimeInfo();
+      }
+    } finally {
       return TimeInfo();
     }
   }
