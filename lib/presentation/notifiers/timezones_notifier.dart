@@ -7,8 +7,12 @@ class TimezoneNotifier extends StateNotifier<List<String>> {
     _init();
   }
 
-  _init() async {
-    state = await WorldTimeApi.getTimeZones() ?? [];
+  _init() {
+    print('TimezoneNotifier._init.1: $state');
+    Future.delayed(Duration(milliseconds: 5000)).then((_) async {
+      state = await WorldTimeApi.getTimeZones() ?? [];
+      print('TimezoneNotifier._init.2: $state');
+    });
   }
 
 

@@ -19,4 +19,4 @@ class ClocksNotifier extends StateNotifier<List<TimeInfo>> {
   }
 }
 
-final clocksProvider = StateNotifierProvider((ref) => ClocksNotifier());
+final clocksProvider = StateNotifierProvider<ClocksNotifier, List<TimeInfo>>((ref) => ClocksNotifier());
