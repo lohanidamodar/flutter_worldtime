@@ -1,21 +1,25 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_worldtime/data/model/time_info.dart';
 import 'package:flutter_worldtime/data/service/worldtime_api.dart';
 import 'package:flutter_worldtime/presentation/notifiers/clocks_notifier.dart';
 import 'package:flutter_worldtime/presentation/notifiers/timezones_notifier.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 final timeZonesProvider = StateNotifierProvider((ref) => TimezoneNotifier());
 
-class TimezonesPage extends StatefulWidget {
+class TimezonesPage extends StatefulHookConsumerWidget {
   @override
-  _TimezonesPageState createState() => _TimezonesPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() {
+    return _TimezonesPageState();
+  }
+  // @override
+  // _TimezonesPageState createState() => _TimezonesPageState();
 }
 
-class _TimezonesPageState extends State<TimezonesPage> {
-  String _timezone;
-  bool _loading;
+class _TimezonesPageState extends ConsumerState<TimezonesPage> {
+  String _timezone = '';
+  bool _loading = false;
   GlobalKey<ScaffoldState> _scaffKey = GlobalKey();
 
   @override
@@ -33,23 +37,21 @@ class _TimezonesPageState extends State<TimezonesPage> {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
-        child: Consumer((context, watch) {
-          final timeZones = watch(timeZonesProvider.state);
+        child: Consumer(builder: (context, ref, child) {
+          final timeZones = ref.watch(timeZonesProvider.notifier).debugState;
           if (timeZones != null) {
             return Column(
               children: [
                 DropdownSearch<String>(
-                  showSearchBox: true,
                   onChanged: (tz) {
                     setState(() {
-                      _timezone = tz;
+                      _timezone = tz ?? '';
                     });
                   },
                   items: timeZones,
-                  mode: Mode.MENU,
                   selectedItem: _timezone,
                 ),
-                RaisedButton(
+                ElevatedButton(
                   child: _loading ? CircularProgressIndicator() : Text("Add"),
                   onPressed: _loading
                       ? null
@@ -59,7 +61,10 @@ class _TimezonesPageState extends State<TimezonesPage> {
                             _loading = true;
                           });
                           bool exists = false;
-                          context.read(clocksProvider.state).forEach((element) {
+                          ref
+                              .read(clocksProvider.notifier)
+                              .debugState
+                              .forEach((element) {
                             if (element.timezone == _timezone) {
                               exists = true;
                             }
@@ -67,7 +72,7 @@ class _TimezonesPageState extends State<TimezonesPage> {
                           if (!exists) {
                             TimeInfo info =
                                 await WorldTimeApi.getTimezoneTime(_timezone);
-                            context.read(clocksProvider).add(info);
+                            ref.read(clocksProvider.notifier).add(info);
                             setState(() {
                               _loading = false;
                             });
@@ -76,7 +81,7 @@ class _TimezonesPageState extends State<TimezonesPage> {
                             setState(() {
                               _loading = false;
                             });
-                            _scaffKey.currentState.showSnackBar(SnackBar(
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               content: Text(
                                   "The timezone clock is already available in the list."),
                             ));

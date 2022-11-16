@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_worldtime/presentation/pages/clock_page.dart';
 import 'package:flutter_worldtime/presentation/pages/time_zones_page.dart';
 

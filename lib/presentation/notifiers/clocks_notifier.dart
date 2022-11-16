@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_worldtime/data/model/time_info.dart';
-import 'package:state_notifier/state_notifier.dart';
 
 class ClocksNotifier extends StateNotifier<List<TimeInfo>> {
   ClocksNotifier() : super([]);
@@ -9,7 +8,6 @@ class ClocksNotifier extends StateNotifier<List<TimeInfo>> {
     var temp = state;
     temp.add(clock);
     state = temp;
-    
   }
 
   remove(TimeInfo clock) {
@@ -19,4 +17,5 @@ class ClocksNotifier extends StateNotifier<List<TimeInfo>> {
   }
 }
 
-final clocksProvider = StateNotifierProvider((ref) => ClocksNotifier());
+final clocksProvider = StateNotifierProvider<ClocksNotifier, List<TimeInfo>>(
+    (ref) => ClocksNotifier());

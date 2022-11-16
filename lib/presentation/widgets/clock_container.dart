@@ -4,7 +4,7 @@ import 'package:flutter_worldtime/res/constants.dart';
 class ClockContainer extends StatelessWidget {
   final Widget child;
 
-  ClockContainer({this.child});
+  ClockContainer({required this.child});
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -15,8 +15,9 @@ class ClockContainer extends StatelessWidget {
             width: 270,
             height: 270,
             decoration: BoxDecoration(
-                color: AppColors.darkClockBg,
-                shape: BoxShape.circle,),
+              color: AppColors.darkClockBg,
+              shape: BoxShape.circle,
+            ),
           ),
         ),
         Center(

@@ -1,22 +1,21 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter_worldtime/presentation/pages/clock_page.dart';
 
 class TimeInfo extends Equatable {
-  String abbreviation;
-  String clientIp;
-  String datetime;
-  int dayOfWeek;
-  int dayOfYear;
-  bool dst;
-  String dstFrom;
-  int dstOffset;
-  String dstUntil;
-  int rawOffset;
-  String timezone;
-  int unixtime;
-  String utcDatetime;
-  String utcOffset;
-  int weekNumber;
+  String? abbreviation;
+  String? clientIp;
+  String? datetime;
+  int? dayOfWeek;
+  int? dayOfYear;
+  bool? dst;
+  String? dstFrom;
+  late int dstOffset;
+  String? dstUntil;
+  late int rawOffset;
+  late String timezone;
+  int? unixtime;
+  String? utcDatetime;
+  String? utcOffset;
+  int? weekNumber;
 
   TimeInfo(
       {this.abbreviation,
@@ -26,10 +25,10 @@ class TimeInfo extends Equatable {
       this.dayOfYear,
       this.dst,
       this.dstFrom,
-      this.dstOffset,
+      this.dstOffset = 0,
       this.dstUntil,
-      this.rawOffset,
-      this.timezone,
+      this.rawOffset = 0,
+      this.timezone = '',
       this.unixtime,
       this.utcDatetime,
       this.utcOffset,
@@ -43,10 +42,10 @@ class TimeInfo extends Equatable {
     dayOfYear = json['day_of_year'];
     dst = json['dst'];
     dstFrom = json['dst_from'];
-    dstOffset = json['dst_offset'];
+    dstOffset = json['dst_offset'] ?? 0;
     dstUntil = json['dst_until'];
-    rawOffset = json['raw_offset'];
-    timezone = json['timezone'];
+    rawOffset = json['raw_offset'] ?? 0;
+    timezone = json['timezone'] ?? '';
     unixtime = json['unixtime'];
     utcDatetime = json['utc_datetime'];
     utcOffset = json['utc_offset'];
@@ -62,10 +61,10 @@ class TimeInfo extends Equatable {
     data['day_of_year'] = this.dayOfYear;
     data['dst'] = this.dst;
     data['dst_from'] = this.dstFrom;
-    data['dst_offset'] = this.dstOffset;
+    data['dst_offset'] = this.dstOffset ?? 0;
     data['dst_until'] = this.dstUntil;
-    data['raw_offset'] = this.rawOffset;
-    data['timezone'] = this.timezone;
+    data['raw_offset'] = this.rawOffset ?? 0;
+    data['timezone'] = this.timezone ?? '';
     data['unixtime'] = this.unixtime;
     data['utc_datetime'] = this.utcDatetime;
     data['utc_offset'] = this.utcOffset;
@@ -74,5 +73,5 @@ class TimeInfo extends Equatable {
   }
 
   @override
-  List<Object> get props => [abbreviation, timezone];
+  List<Object?> get props => [abbreviation, timezone];
 }

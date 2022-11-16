@@ -1,14 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_worldtime/data/model/time_info.dart';
 import 'package:flutter_worldtime/data/service/worldtime_api.dart';
 import 'package:flutter_worldtime/presentation/notifiers/clocks_notifier.dart';
+import 'package:flutter_worldtime/presentation/pages/time_zones_page.dart';
 import 'package:flutter_worldtime/presentation/widgets/clock_container.dart';
 import 'package:flutter_worldtime/presentation/widgets/clock_hands.dart';
 import 'package:flutter_worldtime/res/routes.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 final timeProvider = StateProvider<DateTime>((ref) => DateTime.now());
@@ -17,20 +17,23 @@ final timezone = FutureProvider<TimeInfo>((ref) async {
   return WorldTimeApi.getCurrentTime();
 });
 
-class ClockPage extends StatefulWidget {
+class ClockPage extends StatefulHookConsumerWidget {
   @override
-  _ClockPageState createState() => _ClockPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() {
+    return _ClockPageState();
+  }
 }
 
-class _ClockPageState extends State<ClockPage> {
-  Timer timer;
-  Timer timer2;
+class _ClockPageState extends ConsumerState<ClockPage> {
+  Timer? timer;
+  Timer? timer2;
+
   @override
   void initState() {
     super.initState();
     timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      context.read(timeProvider).state =
-          context.read(timeProvider).state.add(Duration(seconds: 1));
+      ref.read(timeProvider.notifier).state =
+          ref.read(timeProvider.notifier).state.add(Duration(seconds: 1));
     });
   }
 
@@ -62,8 +65,10 @@ class _ClockPageState extends State<ClockPage> {
               ],
             ),
             Container(
-              child: Consumer((context, watch) {
-                final time = watch(timeProvider).state;
+              child: Consumer(builder: (context, ref, child) {
+                ref.watch(timeZonesProvider);
+                ref.watch(timeProvider);
+                final time = ref.watch(timeProvider.notifier).debugState;
                 return Column(
                   children: [
                     ClockContainer(
@@ -72,8 +77,8 @@ class _ClockPageState extends State<ClockPage> {
                       ),
                     ),
                     const SizedBox(height: 20.0),
-                    Consumer((context, watch) {
-                      final timeinfo = watch(timezone);
+                    Consumer(builder: (context, ref, child) {
+                      final timeinfo = ref.watch(timezone);
                       return timeinfo.when(
                           data: (timeinfo) => Text(
                                 timeinfo?.timezone ?? '',
@@ -98,16 +103,16 @@ class _ClockPageState extends State<ClockPage> {
             SizedBox(
               height: 160,
               child: Consumer(
-                (context, watch) {
-                  List<TimeInfo> clocks = watch(clocksProvider.state);
-                  var time2 = watch(timeProvider).state;
+                builder: (context, ref, child) {
+                  final clocks = ref.watch<List<TimeInfo>>(clocksProvider);
+                  var tp = ref.watch<DateTime>(timeProvider);
                   if (clocks != null && clocks.isNotEmpty)
                     return ListView.builder(
                       itemCount: clocks.length,
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) {
                         TimeInfo clock = clocks[index];
-                        var time = time2.toUtc();
+                        var time = tp.toUtc();
                         int offset = clock.rawOffset + clock.dstOffset;
                         if (clock.rawOffset > 0) {
                           time = time.add(Duration(seconds: offset));
@@ -164,7 +169,9 @@ class _ClockPageState extends State<ClockPage> {
                                 child: IconButton(
                                   icon: Icon(Icons.clear),
                                   onPressed: () {
-                                    context.read(clocksProvider).remove(clock);
+                                    ref
+                                        .read(clocksProvider.notifier)
+                                        .remove(clock);
                                   },
                                 ),
                               )
