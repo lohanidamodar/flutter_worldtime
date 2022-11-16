@@ -23,7 +23,7 @@ class WorldTimeApi {
       } else {
         return TimeInfo();
       }
-    } finally {
+    } catch(e) {
       return TimeInfo();
     }
   }
