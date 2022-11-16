@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter_worldtime/presentation/pages/clock_page.dart';
 
 class TimeInfo extends Equatable {
   String? abbreviation;

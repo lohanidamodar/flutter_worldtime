@@ -1,6 +1,5 @@
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_worldtime/data/model/time_info.dart';
 import 'package:flutter_worldtime/data/service/worldtime_api.dart';
 import 'package:flutter_worldtime/presentation/notifiers/clocks_notifier.dart';
@@ -10,7 +9,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 final timeZonesProvider = StateNotifierProvider((ref) => TimezoneNotifier());
 
 class TimezonesPage extends StatefulHookConsumerWidget {
-
   @override
   ConsumerState<ConsumerStatefulWidget> createState() {
     return _TimezonesPageState();
@@ -40,9 +38,7 @@ class _TimezonesPageState extends ConsumerState<TimezonesPage> {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Consumer(builder: (context, ref, child) {
-          final timeZones1 = ref.watch(timeZonesProvider);
           final timeZones = ref.watch(timeZonesProvider.notifier).debugState;
-          debugPrint('_TimezonesPageState.build: $_timezone');
           if (timeZones != null) {
             return Column(
               children: [
@@ -65,7 +61,10 @@ class _TimezonesPageState extends ConsumerState<TimezonesPage> {
                             _loading = true;
                           });
                           bool exists = false;
-                          ref.read(clocksProvider.notifier).debugState.forEach((element) {
+                          ref
+                              .read(clocksProvider.notifier)
+                              .debugState
+                              .forEach((element) {
                             if (element.timezone == _timezone) {
                               exists = true;
                             }

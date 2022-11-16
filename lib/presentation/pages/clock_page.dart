@@ -1,8 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_worldtime/data/model/time_info.dart';
 import 'package:flutter_worldtime/data/service/worldtime_api.dart';
 import 'package:flutter_worldtime/presentation/notifiers/clocks_notifier.dart';
@@ -71,7 +69,6 @@ class _ClockPageState extends ConsumerState<ClockPage> {
                 ref.watch(timeZonesProvider);
                 ref.watch(timeProvider);
                 final time = ref.watch(timeProvider.notifier).debugState;
-                debugPrint('_ClockPageState.build: ${time}');
                 return Column(
                   children: [
                     ClockContainer(
@@ -107,7 +104,6 @@ class _ClockPageState extends ConsumerState<ClockPage> {
               height: 160,
               child: Consumer(
                 builder: (context, ref, child) {
-                  final p = ref.watch(clocksProvider);
                   final clocks = ref.watch<List<TimeInfo>>(clocksProvider);
                   var tp = ref.watch<DateTime>(timeProvider);
                   if (clocks != null && clocks.isNotEmpty)

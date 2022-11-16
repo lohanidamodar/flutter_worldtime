@@ -17,22 +17,22 @@ class WorldTimeApi {
 
   static Future<TimeInfo> getTimezoneTime(String timeZone) async {
     try {
-      http.Response res = await http.get(Uri.http("$baseUrl", "api/timezone/$timeZone"));
+      http.Response res =
+          await http.get(Uri.http("$baseUrl", "api/timezone/$timeZone"));
       if (res != null) {
         return TimeInfo.fromJson(jsonDecode(res.body));
       } else {
         return TimeInfo();
       }
-    } catch(e) {
+    } catch (e) {
       return TimeInfo();
     }
   }
 
   static Future<List<String>> getTimeZones() async {
     http.Response res = await http.get(Uri.http("$baseUrl", "api/timezone"));
-    print('WorldTimeApi.getTimeZones: ${res.body}');
     if (res != null)
-      return List<String>.from( jsonDecode(res.body));
+      return List<String>.from(jsonDecode(res.body));
     else
       return [];
   }

@@ -15,8 +15,9 @@ class ClockContainer extends StatelessWidget {
             width: 270,
             height: 270,
             decoration: BoxDecoration(
-                color: AppColors.darkClockBg,
-                shape: BoxShape.circle,),
+              color: AppColors.darkClockBg,
+              shape: BoxShape.circle,
+            ),
           ),
         ),
         Center(
